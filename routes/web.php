@@ -42,6 +42,8 @@ Route::put('/api/reports/{id}/add-rank', 'ReportController@addRank');
 
 Route::post('/api/reports/{report}/types/create', 'ReportTypeController@createReportType');
 Route::delete('/api/reports/types/delete/{type}', 'ReportTypeController@deleteReportType');
+Route::put('/api/reports/{report}/types/{type}/edit', 'ReportTypeController@update');
+
 
 Route::resource('/api/reports/create-subfield', 'ReportTypeSubFieldController');
 

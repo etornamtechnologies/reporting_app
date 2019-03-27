@@ -59,6 +59,7 @@ class AdminController extends Controller
             }
             $result = [];
             $result['code'] = 0;
+            $result['message'] = "roles updated";
             return response()->json($result);
         } catch(Exception $e) {
             $result['code'] = 1;

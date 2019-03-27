@@ -53,63 +53,6 @@
                                 </div>
                             </el-collapse-item>
 
-                            <el-collapse-item name="2">
-                                <template slot="title">
-                                    Walk-in customer experience <span style="font-weight:bold; font-size=20px; margin-left:100px">({{ walkInTotalScorePercent }}%)</span>
-                                </template>
-                                <div style="background-color:#d9e5f7; width:70%; margin:auto">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-light btn-sm float-right" @click="openAddWalkInModal">
-                                                <i class="el-icon-circle-plus"></i> add
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <el-collapse v-for="(entry,index) in walk_in_entries" :key="index">
-                                        <el-collapse-item :title="getTypeInfo(entry)">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <button class="btn btn-light btn-sm" @click="openAddSubFieldModal(entry, index, 'walk_in')">
-                                                        <i class="el-icon-circle-plus-outline"></i> add new field
-                                                    </button>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="float-right">
-                                                        <span style="font-weight:bold" class="mr-3">total(ratio): {{ totalFactor(entry).num }}/{{totalFactor(entry).den}}</span>
-                                                        <span style="font-weight:bold">total(%): {{ totalPercent(entry) }}%</span>
-                                                        <button class="btn btn-light btn-sm  ml-2" @click="removeReportType(entry, index)">
-                                                            <i class="el-icon-delete"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <table class="table table-bordered mt-1">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Label</th>
-                                                        <th>Approve</th>
-                                                        <th>Score</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(sub, idx) in entry.fields" :key="idx">
-                                                        <td>{{ sub.label }}</td>
-                                                        <td>{{ sub.approve }}</td>
-                                                        <td>{{ sub.numerator }}/{{ sub.denumerator }}</td>
-                                                        <td>
-                                                            <button class="btn btn-light btn-sm  ml-2" @click="removeSubField(sub, index, idx, 'walk_in')">
-                                                                <i class="el-icon-delete"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </el-collapse-item>
-                                    </el-collapse>
-                                </div>
-                            </el-collapse-item>
-
                             <el-collapse-item name="3">
                                 <template slot="title">
                                     Phone-in customer experience <span style="font-weight:bold; font-size=20px; margin-left:100px">({{ phoneInTotalScorePercent }}%)</span>
@@ -134,7 +77,11 @@
                                                     <div class="float-right">
                                                         <span style="font-weight:bold" class="mr-3">total(ratio): {{ totalFactor(entry).num }}/{{totalFactor(entry).den}}</span>
                                                         <span style="font-weight:bold">total(%): {{ totalPercent(entry) }}%</span>
-                                                        <button class="btn btn-light btn-sm  ml-2" @click="removeReportType(entry, index)">
+                                                        <button class="btn btn-light btn-sm ml-3" 
+                                                        @click="openEditReportTypeDialog(entry, index, 'phone_in')">
+                                                            <i class="el-icon-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm  ml-3" @click="removeReportType(entry, index)">
                                                             <i class="el-icon-delete"></i>
                                                         </button>
                                                     </div>
@@ -155,7 +102,75 @@
                                                         <td>{{ sub.approve }}</td>
                                                         <td>{{ sub.numerator }}/{{ sub.denumerator }}</td>
                                                         <td>
+                                                            <button class="btn btn-light btn-sm  ml-2" @click="openEditSubFieldDialog(sub, index, idx, 'phone_in')">
+                                                                <i class="el-icon-edit"></i>
+                                                            </button>
                                                             <button class="btn btn-light btn-sm  ml-2" @click="removeSubField(sub, index, idx, 'phone_in')">
+                                                                <i class="el-icon-delete"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </el-collapse-item>
+                                    </el-collapse>
+                                </div>
+                            </el-collapse-item>
+
+
+                            <el-collapse-item name="2">
+                                <template slot="title">
+                                    Walk-in customer experience <span style="font-weight:bold; font-size=20px; margin-left:100px">({{ walkInTotalScorePercent }}%)</span>
+                                </template>
+                                <div style="background-color:#d9e5f7; width:70%; margin:auto">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-light btn-sm float-right" @click="openAddWalkInModal">
+                                                <i class="el-icon-circle-plus"></i> add
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <el-collapse v-for="(entry,index) in walk_in_entries" :key="index">
+                                        <el-collapse-item :title="getTypeInfo(entry)">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button class="btn btn-light btn-sm" @click="openAddSubFieldModal(entry, index, 'walk_in')">
+                                                        <i class="el-icon-circle-plus-outline"></i> add new field
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="float-right">
+                                                        <span style="font-weight:bold" class="mr-3">total(ratio): {{ totalFactor(entry).num }}/{{totalFactor(entry).den}}</span>
+                                                        <span style="font-weight:bold">total(%): {{ totalPercent(entry) }}%</span>
+                                                        <button class="btn btn-light btn-sm ml-3" 
+                                                        @click="openEditReportTypeDialog(entry, index, 'walk_in')">
+                                                            <i class="el-icon-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-light btn-sm  ml-2" @click="removeReportType(entry, index)">
+                                                            <i class="el-icon-delete"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <table class="table table-bordered mt-1">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Label</th>
+                                                        <th>Approve</th>
+                                                        <th>Score</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(sub, idx) in entry.fields" :key="idx">
+                                                        <td>{{ sub.label }}</td>
+                                                        <td>{{ sub.approve }}</td>
+                                                        <td>{{ sub.numerator }}/{{ sub.denumerator }}</td>
+                                                        <td>
+                                                            <button class="btn btn-light btn-sm  ml-2" @click="openEditSubFieldDialog(sub, index, idx, 'walk_in')">
+                                                                <i class="el-icon-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-light btn-sm  ml-2" @click="removeSubField(sub, index, idx, 'walk_in')">
                                                                 <i class="el-icon-delete"></i>
                                                             </button>
                                                         </td>
@@ -228,6 +243,42 @@
                                <div class="flex-box">
                                    <img src="/images/rocksters-logo.jpg" alt="" class="logo-container">
                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row px-2">
+                            <div class="col-md-12 py-5" style="background-color:#fff; border-radius:10px">
+                                <div class="row">
+                                    <div class="col-md-12 justify-content-center d-flex">
+                                        <span 
+                                        class="text-uppercase"
+                                        style="font-size:50px; font-weight:bold"> {{ (info.branch || {}).label }} </span>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col-md-12 justify-content-center d-flex">
+                                        <span
+                                        style="font-size:50px; font-weight:bold">Service Excellence Report</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col-md-12 justify-content-center d-flex">
+                                        <span
+                                        style="font-size:50px; font-weight:bold">Your perfomance:</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col-md-12 justify-content-center d-flex">
+                                        <span
+                                        style="font-size:60px; font-weight:bolder"> {{ averageScore }}% </span>
+                                    </div>
+                                </div>
+                                <div class="row mt-1 mb-5">
+                                    <div class="col-md-12 justify-content-center d-flex">
+                                        <span
+                                        style="font-size:60px; font-weight:bolder"> {{ getClass(averageScore) }} </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -327,10 +378,10 @@
                             </div>
                         </div>
                         <div class="row py-2 px-2" style="border:solid 2px #9fa2a3; border-radius:10px; overflow-x:auto">
-                            <div class="col-md-7">
-                                <div class="chart-container">
+                            <div class="col-md-7 col-sm-12 col-xs-12">
+                                <div id="chart-container">
                                     <fusioncharts 
-                                    :max-width="trendMaxWidth"
+                                    :max-width="max_line_width"
                                     :type="line_type"
                                     :width="line_width"
                                     :height="line_height"
@@ -338,7 +389,7 @@
                                     :dataSource="trendLineChartData"></fusioncharts>
                                 </div>
                             </div>
-                            <div class="col-md-5" style="min-width:300px">
+                            <div class="col-md-5 col-sm-12 col-xs-12" style="min-width:300px">
                                 <div class="row">
                                     <div class="col-sm-6" style="text-align:center">
                                         <span>Current</span>
@@ -403,29 +454,6 @@
                 <div class="row">
                     <div class="col-md-6" style="min-height:400px">
                         <div class="card">
-                            <div class="card-header py-1 bg-dark text-white">Walk-In Customer experience</div>
-                            <div class="card-body">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Field</th>
-                                            <th>Approve</th>
-                                            <th>Ratio</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(entry, index) in walkInCsv" :key="index">
-                                            <td>{{ entry.field }}</td>
-                                            <td>{{ entry.approve }}</td>
-                                            <td style="min-width:90px">{{ entry.score_ratio }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6" style="min-height:400px">
-                        <div class="card">
                             <div class="card-header py-1 bg-dark text-white">Phone-In Customer experience</div>
                             <div class="card-body">
                                 <table class="table">
@@ -438,6 +466,29 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="(entry, index) in phoneInCsv" :key="index">
+                                            <td>{{ entry.field }}</td>
+                                            <td>{{ entry.approve }}</td>
+                                            <td style="min-width:90px">{{ entry.score_ratio }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="min-height:400px">
+                        <div class="card">
+                            <div class="card-header py-1 bg-dark text-white">Walk-In Customer experience</div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Approve</th>
+                                            <th>Ratio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(entry, index) in walkInCsv" :key="index">
                                             <td>{{ entry.field }}</td>
                                             <td>{{ entry.approve }}</td>
                                             <td style="min-width:90px">{{ entry.score_ratio }}</td>
@@ -467,7 +518,7 @@
                     >
                     </b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="success" class="btn-block">
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
                     <i class="fas fa-edit"></i> Add
                 </b-button>
             </b-form>
@@ -489,8 +540,30 @@
                     >
                     </b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="success" class="btn-block">
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
                     <i class="fas fa-edit"></i> Add
+                </b-button>
+            </b-form>
+        </b-modal>
+
+        <b-modal ref="editReportTypeDialog"
+        title="edit"
+        centered
+        :no-close-on-backdrop="true"
+        :no-close-on-esc="true"
+        :hide-footer="true"
+        >
+            <b-form @submit.prevent="editReportType">
+                <b-form-group label="field label">
+                    <b-form-input
+                        type="text"
+                        v-model="edit_report_type.label"
+                        required
+                    >
+                    </b-form-input>
+                </b-form-group>
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
+                    <i class="fas fa-edit"></i> Update
                 </b-button>
             </b-form>
         </b-modal>
@@ -505,6 +578,7 @@
             <b-form @submit.prevent="createSubField">
                 <b-form-group label="field label">
                     <b-form-input
+                        id="#phone-in-subfield-label"
                         type="text"
                         v-model="new_sub_field.label"
                         required
@@ -523,7 +597,8 @@
                         type="number"
                         v-model="new_sub_field.num"
                         required
-                        min="1"
+                        min="0"
+                        autocomplete="off"
                     >
                     </b-form-input>
                 </b-form-group>
@@ -532,12 +607,63 @@
                         type="number"
                         v-model="new_sub_field.den"
                         required
-                        min="1"
+                        min="0"
+                        autocomplete="off"
                     >
                     </b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="success" class="btn-block" :disabled="sub_loading">
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
                     <i class="fas fa-edit"></i> Add
+                </b-button>
+            </b-form>
+        </b-modal>
+
+
+        <b-modal ref="editSubFieldDialog"
+            title="add new field"
+            centered
+            :no-close-on-backdrop="true"
+            :no-close-on-esc="true"
+            :hide-footer="true"
+        >
+            <b-form @submit.prevent="editSubField">
+                <b-form-group label="field label">
+                    <b-form-input
+                        type="text"
+                        v-model="edit_sub_field.label"
+                        required
+                    >
+                    </b-form-input>
+                </b-form-group>
+                <div class="form-group">
+                    <label for="">Approve</label>
+                    <select name="" id="" class="form-control" v-model="edit_sub_field.approve">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                <b-form-group label="score(numerator)">
+                    <b-form-input
+                        type="number"
+                        v-model="edit_sub_field.numerator"
+                        required
+                        min="0"
+                        autocomplete="off"
+                    >
+                    </b-form-input>
+                </b-form-group>
+                <b-form-group label="score(denumerator)">
+                    <b-form-input
+                        type="number"
+                        v-model="edit_sub_field.denumerator"
+                        required
+                        min="0"
+                        autocomplete="off"
+                    >
+                    </b-form-input>
+                </b-form-group>
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
+                    <i class="fas fa-edit"></i> Update
                 </b-button>
             </b-form>
         </b-modal>
@@ -566,7 +692,7 @@
                     >
                     </b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="success" class="btn-block">
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
                     <i class="fas fa-edit"></i> Add
                 </b-button>
             </b-form>
@@ -600,7 +726,7 @@
                     >
                     </b-form-input>
                 </b-form-group>
-                <b-button type="submit" variant="success" class="btn-block">
+                <b-button type="submit" variant="success" class="btn-block" :disabled="isLoading">
                     <i class="fas fa-edit"></i> Update
                 </b-button>
             </b-form>
@@ -610,6 +736,7 @@
 </template>
 
 <script>
+    const SUB_FIELD_STORE_KEY = 'sub_field_key';
     let items = [];
     import FusionCharts from 'fusioncharts';
     import Charts from 'fusioncharts/fusioncharts.charts';
@@ -620,13 +747,38 @@
     export default {
         mounted() {
             //this.walk_in_datasource.dials.dial[0].value = this.walkInTotalScorePercent;
-            this.fetchReport()
+            this.fetchReport();
+            // jQuery('#phone-in-subfield-label').val((this.new_phone_in || {}).label || "").autocomplete({
+            //     autoFocus:true,
+            //     classes: {
+            //         "ui-autocomplete": "auto-style"
+            //     },
+            //     position: {
+            //     collision:"fit flip"
+            //     },
+            //     minLength: 3,
+            //     source: (request, response)=> {
+            //         let res = this.subFieldStore(request.term)
+            //         response(res);
+            //     },
+            //     select: (event, ui) => {
+            //             $select = jQuery(event.target);
+            //             let value = ui.item;
+            //             this.new_phone_in = value
+            //     },
+            //     change: (event, ui) => {
+            //         let text = jQuery(event.target).val()
+            //     },
+            // }).focus(function() {
+            //     $(this).autocomplete("search");
+            // })    
         },
         watch: {
             
         },
         data() {
             return {
+                isLoading: false,
                 //etx_bar_char data
                 miss_color: '#f44242',
                 score_color: '#277fd1',
@@ -645,7 +797,8 @@
                 bar_height: '400',
                 bar_dataFormat: 'json',
 
-                line_width:"1000",
+                line_width:"800",
+                max_line_width: '800',
                 line_type:"line",
                 line_height:"600",
                 line_dataFormat:"json",
@@ -657,6 +810,8 @@
                 phone_in_total_score_percent: this.phoneInTotalScorePercent,
                 new_trend: {},
                 new_rank:{},
+                edit_report_type: {},
+                edit_sub_field: {},
 
                 trendMaxWidth: '200px',
 
@@ -690,12 +845,15 @@
             fetchReport: function() {
                 let urlArray = (location.href || "").split('/');
                 let reportId = urlArray[urlArray.length - 1];
+                this.isLoading = true;
                 axios.get(`/api/reports/${reportId}`)
                     .then((result)=> {
+                        this.isLoading = false;
                         console.log('res',result);
                         this.report = result.report || {}
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
@@ -710,11 +868,14 @@
                 this.$refs.addRankModal.show();
             },
             createRank: function() {
+                this.isLoading = true;
                 axios.put(`/api/reports/${this.report.report.id}/add-rank`, this.new_rank)
                     .then((res)=> {
+                        this.isLoading = false;
                         location.reload(true);
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
                 
@@ -738,8 +899,10 @@
                 data.total_score_percent = 0;
                 data.numerator = null;
                 data.denumerator = null;
+                this.isLoading = true;
                 axios.post(`/api/reports/${this.info.id}/types/create`, data)
                     .then((res)=> {
+                        this.isLoading = false;
                         if(res.code == 0) {
                             this.$refs.addWalkInNewFieldModal.hide();
                             let type = res.report || {};
@@ -751,7 +914,24 @@
                         }
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
+                    })
+            },
+            editReportType: function() {
+                let data = this.edit_report_type;
+                this.isLoading = true;
+                axios.put(`/api/reports/${this.info.id}/types/${data.id}/edit`, data)
+                    .then((res)=> {
+                        console.log('res',res)
+                        this.isLoading = false;
+                        if(res.code == 0) {
+                            Notifier.success('Updated');
+                            location.reload(true)
+                        } else {
+                            this.isLoading = false;
+                            Notifier.error(res.message || "")
+                        }
                     })
             },
             removeWalkIn: function(index) {
@@ -764,8 +944,10 @@
                 data.total_score_percent = 0;
                 data.numerator = null;
                 data.denumerator = null;
+                this.isLoading = true;
                 axios.post(`/api/reports/${this.info.id}/types/create`, data)
                     .then((res)=> {
+                        this.isLoading = false;
                         if(res.code == 0) {
                             this.$refs.addPhoneInNewFieldModal.hide();
                             let type = res.report || {};
@@ -777,12 +959,15 @@
                         }
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
             removeReportType: function(entry, index) {
+                this.isLoading = true;
                 axios.delete(`/api/reports/types/delete/${entry.id}`)
                     .then((res)=> {
+                        this.isLoading = false;
                         if(res.code == 0) {
                             let type = entry.type || "";
                             if(type == 'walk_in') {
@@ -794,6 +979,7 @@
                         }
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
@@ -809,13 +995,20 @@
                 this.new_sub_field.id = entry.id;
                 this.$refs.addSubFieldModal.show();
             },
+            openEditSubFieldDialog: function(entry, index, type) {
+                console.log('row',entry);
+                this.edit_sub_field = Vue.util.extend({},entry);
+                this.edit_sub_field.index = index || 0;
+                this.edit_sub_field.type = type;
+                this.$refs.editSubFieldDialog.show();
+            },
             createSubField: function() {
                 let type = this.new_sub_field.type;
                 let index = this.new_sub_field.index;
-                this.sub_loading = true;              
+                this.isLoading = true;              
                 axios.post(`/api/reports/create-subfield`, this.new_sub_field)
                     .then((res)=> {
-                        this.sub_loading = false;
+                        this.isLoading = false;
                         if(res.code == 0) {
                             this.$refs.addSubFieldModal.hide();
                             if(type == 'walk_in') {
@@ -829,13 +1022,29 @@
                         }
                     })
                     .catch((err)=> {
-                        this.sub_loading = false;
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
+            editSubField: function() {
+                console.log('sub',this.edit_sub_field)
+                this.isLoading = true;
+                let data = this.edit_sub_field
+                axios.put(`/api/reports/create-subfield/${data.id}`, data)
+                    .then(res=> {
+                        this.isLoading = false;
+                        Notifier.success('updated');
+                        location.reload(true);
+                    })
+                    .catch(err=> {
+                        Notifier.error('Failed');
+                    })
+            },
             removeSubField: function(entry, type_index, sub_index, type) {
+                this.isLoading = true;
                 axios.delete(`/api/reports/create-subfield/${entry.id}`)
                     .then((res)=> {
+                        this.isLoading = false;
                         if(res.code == 0) {
                             if(type == 'walk_in') {
                                 ((this.report.walk_in_entries[type_index] || {}).fields || []).splice(sub_index, 1);
@@ -848,6 +1057,7 @@
                         }
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
@@ -886,8 +1096,10 @@
                 this.$refs.addTrendDataModal.show();
             },
             createTrend: function() {
+                this.isLoading = true;
                 axios.post(`/api/reports/${this.report.report.id}/create-trend`, this.new_trend)
                     .then((res)=> {
+                        this.isLoading = false;
                         if(res.code == 0) {
                             this.$refs.addTrendDataModal.hide();
                             this.report.trend_entries.push(res.trend);
@@ -897,12 +1109,15 @@
                         }
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
             deleteTrend: function(id, idx) {
+                this.isLoading = true;
                 axios.delete(`/api/reports/trend-data/${id}`)
                     .then((res)=> {
+                        this.isLoading = false;
                         if(res.code == 0) {
                             this.report.trend_entries.splice(idx, 1);
                             this.trendLineChartData
@@ -912,6 +1127,7 @@
                         }
                     })
                     .catch((err)=> {
+                        this.isLoading = false;
                         this.handleError(err);
                     })
             },
@@ -927,9 +1143,40 @@
                 } else {
                     Notifier.error('Server error / Please reload the page or cintact admin');
                 }
+            },
+            openEditReportTypeDialog: function(row, idx, type) {
+                this.edit_report_type = Vue.util.extend({},row);
+                this.edit_report_type.type = type;
+                this.edit_report_type.index = idx;
+                this.$refs.editReportTypeDialog.show();
             }
         },
         computed: {
+            subFieldStore: function(txt) {
+                let store = localStorage.getItem(SUB_FIELD_STORE_KEY);
+                let list = [];
+                if(store) {
+                    list = JSON.parse(store) || [];
+                } else {
+                    return []
+                }
+                let res = list.filter((item)=> {
+                    return item.indexOf(txt) > -1
+                })
+                console.log(res)
+                return res;
+            },
+            setSubField: function(text) {
+                let store = localStorage.getItem(SUB_FIELD_STORE_KEY);
+                let list = [];
+                if(store) {
+                    list = JSON.parse(store);
+                }
+                if(!list.includes(text)) {
+                    list.push(text);
+                    localStorage.setItem(SUB_FIELD_STORE_KEY, JSON.stringify(list));
+                }
+            },
             walkInTotalScorePercent: function() {
                 let entries = this.report.walk_in_entries || [];
                 let totalNum = 0;
@@ -1218,18 +1465,19 @@
                 let phone_entries = this.report.phone_in_entries || [];
                 let res = [];
                 res.push({field:'', approve:'', score_ratio:''});
-                let walkHeader = {field: 'WALK IN CUSTOMER EXPERIENCE', approve:'', score_ratio: this.walkInTotalScorePercent}
-                res.push(walkHeader);
-                walk_entries.forEach((walk_entry)=> {
+                res.push({field:'', approve:'', score_ratio:''});
+                let phoneHeader = {field: 'PHONE IN CUSTOMER EXPERIENCE', approve:'', score_ratio: this.phoneInTotalScorePercent}
+                res.push(phoneHeader);
+                phone_entries.forEach((phone_entry)=> {
                     let f = {};
-                    f.field = (walk_entry.label).toUpperCase() || "";
+                    f.field = (phone_entry.label).toUpperCase() || "";
                     f.approve = "";
-                    let entryRatio = this.totalFactor(walk_entry) || {}
-                    let entryPercent = this.totalPercent(walk_entry) || 0;
+                    let entryRatio = this.totalFactor(phone_entry) || {}
+                    let entryPercent = this.totalPercent(phone_entry) || 0;
                     f.score_ratio = `${entryRatio.num}/${entryRatio.den} (${entryPercent}%)`;
                     res.push(f);
-                    let walk_fields = walk_entry.fields || [];
-                    walk_fields.forEach((ent, index)=> {
+                    let phone_fields = phone_entry.fields || [];
+                    phone_fields.forEach((ent, index)=> {
                         let d = {};
                         d.index = index+1;
                         d.field = ent.label || "";
@@ -1244,19 +1492,18 @@
                         res.push(d)
                     })
                 }) 
-                res.push({field:'', approve:'', score_ratio:''});
-                let phoneHeader = {field: 'PHONE IN CUSTOMER EXPERIENCE', approve:'', score_ratio: this.phoneInTotalScorePercent}
-                res.push(phoneHeader);
-                phone_entries.forEach((phone_entry)=> {
+                let walkHeader = {field: 'WALK IN CUSTOMER EXPERIENCE', approve:'', score_ratio: this.walkInTotalScorePercent}
+                res.push(walkHeader);
+                walk_entries.forEach((walk_entry)=> {
                     let f = {};
-                    f.field = (phone_entry.label).toUpperCase() || "";
+                    f.field = (walk_entry.label).toUpperCase() || "";
                     f.approve = "";
-                    let entryRatio = this.totalFactor(phone_entry) || {}
-                    let entryPercent = this.totalPercent(phone_entry) || 0;
+                    let entryRatio = this.totalFactor(walk_entry) || {}
+                    let entryPercent = this.totalPercent(walk_entry) || 0;
                     f.score_ratio = `${entryRatio.num}/${entryRatio.den} (${entryPercent}%)`;
                     res.push(f);
-                    let phone_fields = phone_entry.fields || [];
-                    phone_fields.forEach((ent, index)=> {
+                    let walk_fields = walk_entry.fields || [];
+                    walk_fields.forEach((ent, index)=> {
                         let d = {};
                         d.index = index+1;
                         d.field = ent.label || "";
@@ -1288,6 +1535,12 @@
             },
             reportName: function() {
                 return this.info.label || "customer_report";
+            },
+            averageScore: function() {
+                let walkInPercent = this.walkInTotalScorePercent || 0;
+                let phoneInPercent = this.phoneInTotalScorePercent || 0;
+                let sum = Number(walkInPercent) + Number(phoneInPercent)
+                return (sum/2).toFixed(2)
             }
         }
     }
@@ -1406,6 +1659,14 @@
         }
         .raphael-group-163-canvas {
             max-width: 20px;
+        }
+        #chartobject-3 {
+
+        }
+        #raphael-paper-140 {
+            /* width: 100%;
+            max-width: 5100%;
+            overflow-x: hidden; */
         }
     }
 </style>

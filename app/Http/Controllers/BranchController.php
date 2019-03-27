@@ -93,7 +93,7 @@ class BranchController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'label'=> 'required|unique:branches, label, '.$id.'$id'
+            'label'=>'required|unique:branches,label,'.$id.'id',
         ]);
         try {
             $branch = Branch::where('id', $id)

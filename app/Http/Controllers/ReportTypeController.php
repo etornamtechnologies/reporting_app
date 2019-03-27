@@ -35,6 +35,25 @@ class ReportTypeController extends Controller
         return response()->json($result);
     }
 
+    public function update(Request $request, $reportId, $typeId)
+    {
+        $input = $request->all();
+        $result = [];
+        try {
+            $reportType = ReportType::where('id', $typeId)->update([
+                'report_id'=> $reportId,
+                'label'=> $input['label']
+            ]);
+            $result = [];
+            $result['code']=0;
+            $result['report'] = ReportType::findOrfail($typeId);
+        } catch(Exception $e) {
+            $result['code'] = 1;
+            $result['message'] = "Server error";
+        }
+        return response()->json($result);
+    }
+
     public function deleteReportType($id) 
     {
         $result = [];

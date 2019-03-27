@@ -1,5 +1,6 @@
 
 window._ = require('lodash');
+const BASEURL = 'http://shopperreport.errandaapp.com';
 
 import { Message } from 'element-ui'
 
@@ -26,7 +27,8 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
-window.axios.defaults.baseURL = process.env.MIX_APP_URL;
+window.axios.defaults.baseURL = 'http://localhost:8000';
+//window.axios.defaults.baseURL = 'http://localhost:8000'
 
 
 window.axios.interceptors.response.use(function (response) {
@@ -34,13 +36,15 @@ window.axios.interceptors.response.use(function (response) {
     let code = res.code;
     let method = response.config.method;
     if(code == 0) {
-        if(method != 'get') {
+        if(res.message) {
             Notifier.success(res.message || "")
         }
-        return response.data;
     } else {
-        return Notifier.error(response.data.message || "server error");
+        if(res.message) {
+            Notifier.error(res.message || "")
+        }
     }
+    return response.data;
 }, function (error) {
     let errResponse = error.response || {};
     if(errResponse.status ==422) {
@@ -53,6 +57,10 @@ window.axios.interceptors.response.use(function (response) {
             })
             return;
         })
+    } else if(errResponse.status == 500) {
+        Notifier.error(error.message || "");
+    } else if(errResponse.status == 401) {
+        location.href = `${BASEURL}/login`;   
     }
     return Promise.reject(error);
   });

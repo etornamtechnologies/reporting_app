@@ -6,7 +6,7 @@
     <div class="collapse navbar-collapse text-light" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item {{Request::is('home') ? 'active' : ''}}">
-                <a class="nav-link" href="{{ url('/home') }}">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url('/') }}">Home <span class="sr-only">(current)</span></a>
             </li>
             @if(Auth::check() && Auth::user()->hasAnyRole(['admin']))
                 <li class="nav-item">

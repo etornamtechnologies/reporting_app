@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md-12">
+                            <div class="col-md-12" v-loading="isLoading">
                                 <b-table
                                 bordered
                                 stacked="md"
@@ -35,6 +35,7 @@
                                         @click="openEditModal(row.item, row.index)"
                                         class="btn btn-sm btn-primary">edit</button>
                                         <button 
+                                        disabled
                                         @click="deleteEntry(row.item)"
                                         class="btn btn-danger btn-sm">delete</button>
                                     </template>
@@ -101,18 +102,20 @@
                 perPage: 10,
                 totalRows: null,
                 pageOptions: [10, 15, 20],
+                isLoading: false,
             }
         },
         methods: {
             fetchBranches: function(){
+                this.isLoading = true;
                 axios.get('/api/branches')
                     .then(result=> {
-                        console.log(result.branches);
+                        this.isLoading = false;
                         this.branches = result.branches || []
                         this.totalRows = this.branches.length
                     })
                     .catch(err=> {
-
+                        this.isLoading = false;
                     })
             },
             createBranch: function(){

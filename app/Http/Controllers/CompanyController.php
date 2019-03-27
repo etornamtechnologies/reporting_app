@@ -62,21 +62,17 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'label'=> 'required|unique:companies, label, '.$id.'id',
+            'label'=>'required|unique:companies,label,'.$id.'id',
         ]);
         $file = null;
         if($request->hasFile('logo')) {
             $file = $request->file('logo');
         }
-        try {
-            $company = Company::where('id', $id)->update([
-                'label' => $request->label,
-                'user_id'=> Auth::user()->id,
-            ]);
-            return response()->json(['code'=>0, 'message'=>'company updated']);
-        } catch(Exception $e) {
-            return response()->json(['code'=> 1, 'message'=>'Server error']);
-        }
+        $company = Company::where('id', $id)->update([
+            'label' => $request->label,
+            'user_id'=> Auth::user()->id,
+        ]);
+        return response()->json(['code'=>0, 'message'=>'company updated'], 200);
     }
 
     public function destroy($id)

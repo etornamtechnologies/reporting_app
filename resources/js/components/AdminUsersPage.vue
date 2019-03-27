@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card mt-2">
                     <div class="card-header py-1">Users</div>
-                    <div class="card-body">
+                    <div class="card-body" v-loading="isLoading">
                         <b-table
                             show-empty
                             stacked="md"
@@ -43,7 +43,8 @@
                 currentPage: 1,
                 perPage:10,
                 pageOptions: [10,20,30],
-                totalRows: 0,              
+                totalRows: 0,    
+                isLoading: false,          
             }
         },
         mounted() {
@@ -51,18 +52,21 @@
         },
         methods: {
             fetchUsers: function() {
+                this.isLoading = true;
                 axios.get('/api/admin/users')
                 .then((res)=> {
+                    this.isLoading = false;
                     if(res.code == 0) {
                         this.users = res.users || [];
                     }
                 })
                 .catch((err)=> {
+                    this.isLoading = false;
                     alert(err);
                 })
             },
             userDetail: function(user) {
-                let baseUrl = process.env.MIX_APP_URL;
+                let baseUrl = 'http://localhost:8000';
                 location.href = `${baseUrl}/admin/users/${user.id}`
             },
             deleteUser: function(user) {

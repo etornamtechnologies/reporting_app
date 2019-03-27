@@ -135,10 +135,14 @@ class ReportController extends Controller
     {
         $input = $request->all();
         $request->validate([
-            'label'=> 'required|unique:reports, label, '.$id.'id',
+            'label'=> 'required',
             'company_id'=> 'required',
             'branch_id'=> 'required',
         ]);
+        $reprot = Report::findOrFail($id);
+        if($report->id !== Auth::user()->id) {
+            return response()->json(['code'=> 1, 'message'=> 'You cannot edit this report because you are ']);
+        }
         $report = Report::where('id', $id)->update([
             'label'=> $input['label'],
             'company_id'=> $input['company_id'],

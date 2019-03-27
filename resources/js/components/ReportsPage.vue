@@ -22,7 +22,9 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md-12">
+                            <div class="col-md-12" 
+                                style="min-height:500px"
+                                v-loading="isLoading">
                                 <b-table
                                 bordered
                                 stacked="md"
@@ -118,10 +120,9 @@
     </div>
 </template>
 <script>
-    let baseUrl = process.env.MIX_APP_URL;
+    let baseUrl = 'http://localhost:8000';
     export default {
         mounted() {
-            console.log('baseUrl', process.env.MIX_BASE_URL);
             this.fetchCompanies();
             this.fetchBranches();
             this.fetchReports();
@@ -166,14 +167,16 @@
                     })
             },
             fetchReports: function(){
+                this.isLoading = true;
                 axios.get('/api/reports')
                     .then(result=> {
+                        this.isLoading = false;
                         console.log(result.reports);
                         this.reports = result.reports || []
                         this.totalRows = this.reports.length
                     })
                     .catch(err=> {
-
+                        this.isLoading = false;
                     })
             },
             openCreateReportModal: function() {

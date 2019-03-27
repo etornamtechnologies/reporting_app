@@ -151,7 +151,6 @@
                 axios.post(`/api/admin/users/${userId}/assign-role`, roles)
                     .then((res)=> {
                         if(res.code == 0) {
-                            Notifier.success('added');
                             location.reload(true)
                         }
                     })

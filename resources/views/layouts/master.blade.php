@@ -17,6 +17,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="/css/master.css">
     <style>
         .card-header {
             text-transform: uppercase;
@@ -30,6 +31,8 @@
             @yield('content')
         </main>
     </div>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/notifier.js"></script>
 </body>
 </html>

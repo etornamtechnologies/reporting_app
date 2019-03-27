@@ -97,7 +97,29 @@ class ReportTypeSubFieldController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        $result = [];
+        $request->validate([
+            'label'=> 'required',
+            'numerator'=>'required',
+            'denumerator'=> 'required',
+            'approve'=> 'required',
+        ]);
+        try {
+            $field = ReportField::where('id', $id)->update([
+                'label'=> $input['label'],
+                'approve'=> $input['approve'],
+                'numerator'=>$input['numerator'],
+                'denumerator'=> $input['denumerator']
+            ]);
+            $result = [];
+            $result['code'] = 0;
+            $result['field'] = ReportField::findOrFail($id);
+        } catch(Exception $e) {
+            $result['code'] = 1;
+            $result['message'] = "Server error! Please contact admin";
+        }
+        return response()->json($result);
     }
 
     /**

@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md-12">
+                            <div class="col-md-12" v-loading="isLoading">
                                 <b-table
                                 bordered
                                 stacked="md"
@@ -35,6 +35,7 @@
                                         @click="openEditModal(row.item, row.index)"
                                         class="btn btn-sm btn-primary">edit</button>
                                         <button 
+                                        disabled
                                         @click="deleteEntry(row.item)"
                                         class="btn btn-danger btn-sm">delete</button>
                                     </template>
@@ -82,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <b-modal ref="editModal" hide-footer title="Using Component Methods" centered>
+        <b-modal ref="editModal" hide-footer title="UPDATE COMPANY" centered>
             <form @submit.prevent="updateCompany">
                 <div class="form-group">
                     <label for="">Label</label>
@@ -104,6 +105,7 @@
     export default {
         mounted(){
             this.fetchCompanies();
+            console.log('welcome to comapanies')
         },
         data(){
             return {
@@ -119,18 +121,20 @@
                 perPage: 10,
                 totalRows: null,
                 pageOptions: [10, 15, 20],
+                isLoading: true,
             }
         },
         methods: {
             fetchCompanies: function(){
+                this.isLoading = true;
                 axios.get('/api/companies')
                     .then(result=> {
-                        console.log(result.companies);
+                        this.isLoading = false;
                         this.companies = result.companies || []
                         this.totalRows = this.companies.length
                     })
                     .catch(err=> {
-
+                        this.isLoading = false;
                     })
             },
             createCompany: function(){
@@ -139,9 +143,11 @@
                 fd.append('label', this.company.label)
                 for(var pair of fd.entries()) {
                     console.log(pair[0]+', '+pair[1]);
-                    }
+                }
+                this.isLoading = true;
                 axios.post('/api/companies', fd)
                     .then(result=> {
+                        this.isLoading = false;
                         if((result || {}).code == 0) {
                             this.companies.push(result.company || {});
                         this.company.label = "";
@@ -149,15 +155,21 @@
                         }
                     })
                     .catch(err=> {
-                        
+                        this.isLoading = false;
                     })
             },
             updateCompany: function(){
+                console.log('data', this.edit_data)
                 axios.put(`/api/companies/${this.edit_data.id}`, this.edit_data)
                     .then(result=> {
-                        location.reload(true);
-                        this.edit_data = {id:null, label:'', index:null};
-                        this.$refs.editModal.hide();
+                        if(result.code == 0) {
+                             location.reload(true);
+                            this.edit_data = {id:null, label:'', index:null};
+                            this.$refs.editModal.hide();
+                        }
+                    })
+                    .catch(err=> {
+                        Notifier.error(err.message || 'server error');
                     })
             },
             openEditModal: function(row, index) {
