@@ -39,10 +39,12 @@ Route::post('/api/reports', 'ReportController@store');
 Route::put('/api/reports/{report}', 'ReportController@update');
 Route::delete('/api/reports/{report}', 'ReportController@destroy');
 Route::put('/api/reports/{id}/add-rank', 'ReportController@addRank');
+Route::put('/api/reports/{id}/add-industry-rank', 'ReportController@addIndustryRank');
 
 Route::post('/api/reports/{report}/types/create', 'ReportTypeController@createReportType');
 Route::delete('/api/reports/types/delete/{type}', 'ReportTypeController@deleteReportType');
 Route::put('/api/reports/{report}/types/{type}/edit', 'ReportTypeController@update');
+Route::put('/api/reports/{report}/comment', 'ReportController@updateComment');
 
 
 Route::resource('/api/reports/create-subfield', 'ReportTypeSubFieldController');

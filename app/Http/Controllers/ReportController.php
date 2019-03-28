@@ -64,7 +64,8 @@ class ReportController extends Controller
             'label'=> $input['label'],
             'company_id'=> $input['company_id'],
             'branch_id'=> $input['branch_id'],
-            'user_id'=> Auth::user()->id
+            'user_id'=> Auth::user()->id,
+            'reporter_name'=> $input['reporter_name']
         ]);
         $result = [];
         if($report) {
@@ -110,7 +111,7 @@ class ReportController extends Controller
             $result['code'] = 1;
             $result['message'] = "Server error";
         }
-        return response()->json($result);
+        return response()->json($result, 200);
     }
 
     /**
@@ -192,5 +193,37 @@ class ReportController extends Controller
         $report->update();
         $result=['code'=>0];
         return response()->json($result);
+    }
+
+    public function addIndustryRank(Request $request, $id)
+    {
+        $input = $request->all();
+        $report = Report::findOrFail($id);
+        if($input['title'] == "previous") {
+            $report->industry_previous_num = $input['num'];
+            $report->industry_previous_den = $input['den'];
+        } else {
+            $report->industry_current_num = $input['num'];
+            $report->industry_current_den = $input['den'];
+        }
+        $report->update();
+        $result=['code'=>0];
+        return response()->json($result);
+    }
+
+    public function updateComment(Request $request, $reportId)
+    {
+        $input = $request->all();
+        $reportType = $input['type'];
+        $comment = $input['comment'];
+        $report = Report::findOrFail($reportId);
+        if($reportType == 'phone') {
+            $report->phone_in_comment = $comment;
+        } else if ($reportType == 'walk'){
+            $report->walk_in_comment = $comment;
+        }
+        $report->save();
+        return response()->json(['code'=> 0, 'message'=> 'comment updated successfully'], 200);
+        
     }
 }

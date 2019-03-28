@@ -8,7 +8,7 @@ use App\OverallData;
 
 class Report extends Model
 {
-    protected $fillable = ['label', 'company_id', 'branch_id', 'user_id'];
+    protected $guarded = [];
 
     public function report_types() {
         return $this->hasMany('App\ReportType');

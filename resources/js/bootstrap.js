@@ -40,6 +40,7 @@ window.axios.interceptors.response.use(function (response) {
             Notifier.success(res.message || "")
         }
     } else {
+        
         if(res.message) {
             Notifier.error(res.message || "")
         }

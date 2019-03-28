@@ -85,6 +85,10 @@
                         </option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="">Reporter (Name)</label>
+                    <input type="text" class="form-control" v-model="report.reporter_name" autofocus/>
+                </div>
                 <button class="btn btn-block btn-info mt-4" type="submit"
                 :disabled="isLoading">CREATE REPORT</button>
             </form>
@@ -113,6 +117,10 @@
                         </option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="">Reporter (Name)</label>
+                    <input type="text" class="form-control" v-model="edit_data.reporter_name" autofocus/>
+                </div>
                 <button class="btn btn-block btn-info mt-4" type="submit"
                 :disabled="isLoading">CREATE REPORT</button>
             </form>
@@ -131,7 +139,7 @@
             return {
                 filter:'',
                 reports: [],
-                report: {label:'', company_id:null, branch_id:null},
+                report: {label:'', company_id:null, branch_id:null, reporter_name:''},
                 edit_data: {},
                 headers: [{key:'label', label:'Label'}, {key:'created_at', label:'created on'}
                             ,{key:'company.label', label:'company'}, {key:'branch.label', label:'branch'}

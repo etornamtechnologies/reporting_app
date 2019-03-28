@@ -66,4 +66,5 @@ class ReportTypeController extends Controller
         }
         return response()->json($result);
     }
+
 }
