@@ -1,0 +1,19 @@
+
+.page-loader {
+    position: absolute;
+    z-index: 999999;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color:#eaecef;
+    vertical-align:middle;
+    font-size:large;
+    color:blue;
+    font-style:italic;
+    font-weight:400;
+    background-image: url("/images/ball.svg");
+    background-repeat: no-repeat;
+    background-attachment: absolute;
+    background-position: center;
+}
